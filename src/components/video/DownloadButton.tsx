@@ -14,7 +14,8 @@ export default function DownloadButton() {
     endTime, 
     selectedFormat,
     setError,
-    setDownloadId
+    setDownloadId,
+    setProgress
   } = useDownloadStore();
 
   const handleDownload = async () => {
@@ -53,7 +54,7 @@ export default function DownloadButton() {
       );
       
       setDownloadId(result.downloadId);
-      
+      setProgress({ status: 'completed', progress: 100 });
     } catch (error) {
       console.error('Download failed:', error);
       setError(error instanceof Error ? error.message : 'Failed to start download');

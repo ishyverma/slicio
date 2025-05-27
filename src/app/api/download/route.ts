@@ -13,12 +13,14 @@ export async function POST(req: NextRequest) {
       }, { status: 400 });
     }
 
-    // Mock successful download response as specified in Task 24
+    const timestamp = Date.now();
+    const downloadId = `download-${timestamp}`;
+    
     return NextResponse.json<DownloadResponse>({
       success: true,
       data: {
-        downloadId: `download-${Date.now()}`,
-        fileName: 'video.mp4'
+        downloadId,
+        fileName: `${downloadId}.mp4`
       }
     });
 
@@ -26,7 +28,7 @@ export async function POST(req: NextRequest) {
     console.error('Error processing download request:', error);
     return NextResponse.json<DownloadResponse>({
       success: false,
-      error: 'Internal server error'
+      error: error instanceof Error ? error.message : 'Internal server error'
     }, { status: 500 });
   }
 }
