@@ -1,24 +1,38 @@
 import React from 'react';
+import { useVideoStore } from '../../store/video-store';
+import { Card } from '@/components/ui';
 
-interface VideoPreviewProps {
-  title: string;
-  duration: number;
-  thumbnailUrl: string;
-}
+const VideoPreview: React.FC = () => {
+  const { videoInfo } = useVideoStore();
 
-const formatDuration = (duration: number) => {
-  const minutes = Math.floor(duration / 60);
-  const seconds = duration % 60;
-  return `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
-};
+  const formatDuration = (seconds: number) => {
+    const minutes = Math.floor(seconds / 60);
+    const remainingSeconds = seconds % 60;
+    return `${minutes}:${remainingSeconds < 10 ? '0' : ''}${remainingSeconds}`;
+  };
 
-const VideoPreview: React.FC<VideoPreviewProps> = ({ title, duration, thumbnailUrl }) => {
+  if (!videoInfo) {
+    return null;
+  }
+
   return (
-    <div className="video-preview">
-      <img src={thumbnailUrl} alt="Video Thumbnail" className="w-full h-auto" />
-      <h3 className="text-lg font-bold mt-2">{title}</h3>
-      <p className="text-sm text-gray-600">Duration: {formatDuration(duration)}</p>
-    </div>
+    <Card className="w-full overflow-hidden">
+      <div className="space-y-4">
+        <div className="relative aspect-video w-full">
+          <img 
+            src={videoInfo.thumbnailUrl} 
+            alt={videoInfo.title} 
+            className="absolute inset-0 w-full h-full object-cover"
+          />
+        </div>
+        <div className="p-4 sm:p-6 space-y-2">
+          <h2 className="text-lg sm:text-xl font-semibold line-clamp-2">{videoInfo.title}</h2>
+          <p className="text-sm sm:text-base text-gray-600">
+            Duration: {formatDuration(videoInfo.duration)}
+          </p>
+        </div>
+      </div>
+    </Card>
   );
 };
 
